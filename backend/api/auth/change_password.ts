@@ -34,7 +34,7 @@ async function ChangePasswordApi(
 ) {
   try {
     if (
-      req.body.password &&
+      req.body.curPassword &&
       req.body.newPassword &&
       req.body.token &&
       process.env.SECRET_KEY
@@ -47,11 +47,11 @@ async function ChangePasswordApi(
         const userFromDB = await User.findOne({ _id: verifiedUser.id });
         if (userFromDB && userFromDB.name && userFromDB.password) {
           const passwordMatch = await bcrypt.compare(
-            req.body.password,
+            req.body.curPassword,
             userFromDB.password
           );
           if (passwordMatch) {
-            if (req.body.password === req.body.new_password) {
+            if (req.body.curPassword === req.body.newPassword) {
               res.status(StatusCodes.BAD_REQUEST).send({
                 msg: "Entered passwod is same as existing password. Please enter a different password!!",
               });
@@ -96,7 +96,7 @@ async function ChangePasswordApi(
     } else {
       res
         .status(StatusCodes.BAD_REQUEST)
-        .send({ msg: "Please send valid UserName/Password" });
+        .send({ msg: "Please send valid data" });
     }
   } catch (error: any) {
     if (error instanceof jwt.TokenExpiredError) {

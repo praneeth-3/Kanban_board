@@ -1,10 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearUserData } from "../redux/UserSlice";
-import { useEffect, useRef, useState } from "react";
-import { setAlertProps, showToastMessage } from "../redux/CommonSlice";
+import { clearUserData } from "../../redux/UserSlice";
+import { useEffect } from "react";
+import {
+  closeAlert,
+  setAlertProps,
+  showToastMessage,
+} from "../../redux/CommonSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Constants from "../util/constants";
+import Constants from "../../util/constants";
 
 const DeleteUser = () => {
   const dispatch = useDispatch();
@@ -40,7 +44,10 @@ const DeleteUser = () => {
         show: true,
         title: "Alert",
         message: "Are you sure of deleting your account?",
-        okBtnFunc: deleteUser,
+        okBtnFunc: () => {
+          deleteUser();
+          dispatch(closeAlert({}));
+        },
         okBtnName: "Yes",
       })
     );

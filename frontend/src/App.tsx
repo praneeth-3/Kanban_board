@@ -2,15 +2,15 @@ import "./App.css";
 import "./components/Login/Login.css";
 import Navbar from "./components/Navbar/Navbar";
 import { Routes, Route } from "react-router-dom";
-import Logout from "./pages/Logout";
+import Logout from "./pages/Logout/Logout";
 import About from "./pages/About/About";
-import Home from "./pages/Home/Home";
 import ToastMessage from "./components/Toast/ToastMessage";
-import DeleteUser from "./pages/DeleteUser";
-import ChangePassword from "./pages/ChangePassword";
+import DeleteUser from "./pages/DeleteUser/DeleteUser";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
 import { useDispatch, useSelector } from "react-redux";
-import Alert from "./components/Alert/Alert";
 import { closeAlert } from "./redux/CommonSlice";
+import AlertContainer from "./components/Alert/AlertContainer";
+import HomeContainer from "./pages/Home/HomeContainer";
 
 function App() {
   const alertProps = useSelector((state: any) => state.common.alertProps);
@@ -18,7 +18,7 @@ function App() {
   return (
     <div className="App">
       {alertProps.show && (
-        <Alert
+        <AlertContainer
           title={alertProps.title}
           message={alertProps.message}
           closeAction={() => {
@@ -36,7 +36,9 @@ function App() {
           <Route
             index
             Component={(props) => {
-              return <Home timestamp={new Date().toString()} {...props} />;
+              return (
+                <HomeContainer timestamp={new Date().toString()} {...props} />
+              );
             }}
           ></Route>
           <Route path="logout" element={<Logout />}></Route>

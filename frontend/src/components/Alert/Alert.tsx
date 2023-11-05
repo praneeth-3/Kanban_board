@@ -1,35 +1,6 @@
-import { useEffect, useState } from "react";
 import "./Alert.css";
-import { useSelector } from "react-redux";
 
-const closeIconStyles = {
-  width: "1em",
-  marginLeft: "94%",
-};
 function Alert(props: any) {
-  // const alertMessage = useSelector((state: any) => state.common.alertMessage);
-  const [formData, setFormData] = useState<any>({});
-  const onFormUpdate = (evt: any) => {
-    let _formData = { ...formData };
-    if (evt.target.name) {
-      _formData[evt.target.name as keyof Object] = evt.target.value;
-    }
-    setFormData(_formData);
-  };
-  useEffect(() => {
-    if (!props || !props.message) props?.closeAction();
-  }, [props?.message]);
-  useEffect(() => {
-    if (props?.inputElements) {
-      let _formData = { ...formData };
-      props.inputElements.forEach((element: any) => {
-        if (element) {
-          _formData[element.name] = element.value;
-        }
-      });
-      setFormData(_formData);
-    }
-  }, [props.inputElements]);
   if (props?.message) {
     return (
       <div className="alert-box">
@@ -45,8 +16,8 @@ function Alert(props: any) {
                       <select
                         className="form-control"
                         name={item.name}
-                        value={formData[item.name]}
-                        onChange={onFormUpdate}
+                        value={props.formData[item.name]}
+                        onChange={props.onFormUpdate}
                       >
                         {item.comboOptions.map((option: any) => (
                           <option>{option}</option>
@@ -58,8 +29,8 @@ function Alert(props: any) {
                         className="form-control"
                         placeholder={item.name}
                         name={item.name}
-                        onChange={onFormUpdate}
-                        value={formData[item.name]}
+                        onChange={props.onFormUpdate}
+                        value={props.formData[item.name]}
                       />
                     )}
                   </div>
@@ -77,7 +48,7 @@ function Alert(props: any) {
                   <button
                     className="btn"
                     onClick={() => {
-                      props?.alertOkBtnFunc(formData);
+                      props?.alertOkBtnFunc(props.formData);
                     }}
                   >
                     {props?.okBtnName}
@@ -86,7 +57,7 @@ function Alert(props: any) {
                 <button
                   className="btn"
                   onClick={() => {
-                    setFormData({});
+                    props.setFormData({});
                     props?.closeAction();
                   }}
                 >

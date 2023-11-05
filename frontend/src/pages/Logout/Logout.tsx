@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
-import { clearUserData } from "../redux/UserSlice";
+import { clearUserData } from "../../redux/UserSlice";
 import { useEffect, useState } from "react";
-import { showToastMessage } from "../redux/CommonSlice";
+import { showToastMessage } from "../../redux/CommonSlice";
 import { useNavigate } from "react-router-dom";
 
 function Logout() {

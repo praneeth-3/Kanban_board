@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearUserData } from "../redux/UserSlice";
-import { useEffect, useRef, useState } from "react";
+import { clearUserData } from "../../redux/UserSlice";
+import { useEffect } from "react";
 import {
   closeAlert,
   setAlertProps,
   showToastMessage,
-} from "../redux/CommonSlice";
+} from "../../redux/CommonSlice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Constants from "../util/constants";
-import "./../components/Login/Login.css";
+import Constants from "../../util/constants";
+import "../../components/Login/Login.css";
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
@@ -20,10 +20,12 @@ const ChangePassword = () => {
         show: true,
         title: "Change Password",
         message: "Enter your existing Password and new Password",
-        okBtnFunc: ChangePass,
+        okBtnFunc: (formData: any) => {
+          ChangePass(formData);
+        },
         okBtnName: "Submit",
         inputElements: [
-          { name: "password", value: "", inputType: "password" },
+          { name: "curPassword", value: "", inputType: "password" },
           { name: "newPassword", value: "", inputType: "password" },
         ],
       })
@@ -34,7 +36,7 @@ const ChangePassword = () => {
   }, []);
   const activeUser = useSelector((state: any) => state.user);
   const ChangePass = (formData: any) => {
-    if (formData.password && formData.newPassword && activeUser.token) {
+    if (formData.curPassword && formData.newPassword && activeUser.token) {
       axios
         .post(Constants.apiLinks.auth.changePassword, {
           ...formData,
@@ -50,15 +52,18 @@ const ChangePassword = () => {
           const msg = err.response?.data?.msg
             ? err.response.data.msg
             : err.message;
-          dispatch(
-            setAlertProps({
-              ...Constants.initialAlertProps,
-              show: true,
-              title: "Error",
-              message: msg,
-            })
-          );
+          // dispatch(
+          //   setAlertProps({
+          //     ...Constants.initialAlertProps,
+          //     show: true,
+          //     title: "Error",
+          //     message: msg,
+          //   })
+          // );
+          dispatch(showToastMessage({ message: msg }));
         });
+    } else {
+      dispatch(showToastMessage({ message: "Please enter valid data" }));
     }
   };
   return <></>;

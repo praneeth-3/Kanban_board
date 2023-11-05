@@ -1,92 +1,6 @@
 import "./Login.css";
-import { useRef, useState } from "react";
-import axios from "axios";
-import Constants from "../../util/constants";
-import { useDispatch } from "react-redux";
-import { setActiveUser } from "../../redux/UserSlice";
-import { setAlertProps, showToastMessage } from "../../redux/CommonSlice";
 
-function Login() {
-  const [formData, setFormData] = useState({
-    name: "",
-    password: "",
-  });
-
-  const dispatch = useDispatch();
-  const createNewUser = () => {
-    axios
-      .post(Constants.apiLinks.auth.signin, formData)
-      .then((res: any) => {
-        if (res.data.user && res.data.token)
-          dispatch(
-            setActiveUser({ name: res.data.user.name, token: res.data.token })
-          );
-        dispatch(showToastMessage({ message: res.data.msg }));
-      })
-      .catch((err: any) => {
-        const msg = err.response?.data?.msg
-          ? err.response.data.msg
-          : err.message;
-        dispatch(
-          setAlertProps({
-            ...Constants.initialAlertProps,
-            show: true,
-            title: "Error",
-            message: msg,
-          })
-        );
-      });
-  };
-  const onFormUpdate = (evt: any) => {
-    let _formData = { ...formData };
-    if (evt.target.name) {
-      _formData[evt.target.name as keyof Object] = evt.target.value;
-    }
-    setFormData(_formData);
-  };
-  const LoginUser = () => {
-    if (formData.name && formData.password) {
-      axios
-        .post(Constants.apiLinks.auth.login, formData)
-        .then((res: any) => {
-          if (res.data.user && res.data.token)
-            dispatch(
-              setActiveUser({ name: res.data.user.name, token: res.data.token })
-            );
-          dispatch(showToastMessage({ message: res.data.msg }));
-          setFormData({ name: "", password: "" });
-        })
-        .catch((err: any) => {
-          if (err.response?.data?.msg?.toUpperCase() == "USER NOT FOUND") {
-            dispatch(
-              setAlertProps({
-                ...Constants.initialAlertProps,
-                show: true,
-                title: "Error",
-                message: "User not found, do you want to create a new account?",
-                okBtnFunc: createNewUser,
-                okBtnName: "Yes",
-              })
-            );
-          } else {
-            const msg = err.response?.data?.msg
-              ? err.response.data.msg
-              : err.message;
-            dispatch(
-              setAlertProps({
-                ...Constants.initialAlertProps,
-                show: true,
-                title: "Error",
-                message: msg,
-                okBtnFunc: null,
-                okBtnName: "",
-                inputElements: [],
-              })
-            );
-          }
-        });
-    }
-  };
+function Login(props: any) {
   return (
     <div
       className="modal fade"
@@ -106,8 +20,8 @@ function Login() {
                   className="form-control"
                   placeholder="Enter name"
                   name="name"
-                  onChange={onFormUpdate}
-                  value={formData.name}
+                  onChange={props.onFormUpdate}
+                  value={props.formData.name}
                 />
               </div>
               <div className="form-group">
@@ -116,11 +30,11 @@ function Login() {
                   className="form-control"
                   placeholder="Password"
                   name="password"
-                  onChange={onFormUpdate}
-                  value={formData.password}
+                  onChange={props.onFormUpdate}
+                  value={props.formData.password}
                 />
               </div>
-              <button className="btn" onClick={LoginUser}>
+              <button className="btn" onClick={props.loginUser}>
                 Login / Signin
               </button>
             </div>
