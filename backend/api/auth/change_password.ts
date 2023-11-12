@@ -1,4 +1,4 @@
-import StatusCodes, { INTERNAL_SERVER_ERROR } from "http-status-codes";
+import StatusCodes from "http-status-codes";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express-serve-static-core";
 import { ParsedQs } from "qs";
